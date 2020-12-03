@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 
-public class FileLogger implements WebRequestObserver {
+public class FileLogger{
     String filePath;
 
     public FileLogger(String filePath) {
@@ -17,11 +16,6 @@ public class FileLogger implements WebRequestObserver {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void update(WebRequest request) {
-        String admin = request.getLoggedUser().isAdmin() ? "[ADMIN]" : "[USER]";
-        log(LocalDateTime.now().toString() + " | " + admin + request.getPath());
     }
 
     public synchronized void log(String msg) {

@@ -60,7 +60,7 @@ public class Main {
     public static void main(String[] args) {
         WebServer webServer = new WebServer();
         FileLogger fileLogger = new FileLogger("logs.txt");
-        webServer.attach(fileLogger);
+        WebServerLoggingProxy proxy = new WebServerLoggingProxy(webServer, fileLogger);
 
         User regularUser = new User(false);
         User adminUser = new User(true);
@@ -69,25 +69,25 @@ public class Main {
          * Expected output :
          * Status 403 : user is not authorized to access this content
          */
-        webServer.getRequest(new WebRequest("/dashboard", regularUser));
+        proxy.getRequest(new WebRequest("/dashboard", regularUser));
 
         /**
          * Expected output :
          * Status 404 : Page missing
          */
-        webServer.getRequest(new WebRequest("/dashboard/nonExistingPage", adminUser));
+        proxy.getRequest(new WebRequest("/dashboard/nonExistingPage", adminUser));
 
         /**
          * Expected output :
          * Status 200 : Dashboard content here
          */
-        webServer.getRequest(new WebRequest("/dashboard", adminUser));
+        proxy.getRequest(new WebRequest("/dashboard", adminUser));
 
         /**
          * Expected output :
          * Status 200 : Home content here
          */
-        webServer.getRequest(new WebRequest("/home", regularUser));
+        proxy.getRequest(new WebRequest("/home", regularUser));
 
         /**
          * Expected content of file logs.txt
